@@ -15,7 +15,7 @@ df = df.astype(float)
 def k_nearest_neighbors(data, predict, k=3):
     # radius'ten hepsini karsilastirmayabiliriz
     if len(data) >= k:
-        warnings.warn('not enough data for classifying ' + k + ' items')
+        warnings.warn('not enough data for classifying %d items' % k)
 
     distances = []
     for group in data:
@@ -27,18 +27,19 @@ def k_nearest_neighbors(data, predict, k=3):
 
     distances = sorted(distances, reverse=False)[0:k]
     group_labels = map(lambda x: x[1], distances)
-    most_common = collections.Counter(group_labels).most_common(1)
-    return most_common[0][0]
+    most_common_tuple = collections.Counter(group_labels).most_common(1)
+    most_common = most_common_tuple[0][0]
+    confidence = most_common_tuple[0][1] / float(k)
+    return most_common, confidence
 
 
 features = np.array(df.drop(['Class', 'Id'], 1))
 labels = np.array(df['Class'])
 
-XTrain, XTest, YTrain, YTest = cross_validation.train_test_split(features, labels, test_size=0.25)
-clf = neighbors.KNeighborsClassifier()
+XTrain, XTest, YTrain, YTest = cross_validation.train_test_split(features, labels, test_size=0.3)
+clf = neighbors.KNeighborsClassifier(n_neighbors=5)
 clf.fit(XTrain, YTrain)
 scikit_score = clf.score(XTest, YTest)
-
 
 trained_data = {}
 
@@ -56,9 +57,13 @@ total = 0.
 for i in range(len(XTest)):
     key = YTrain[i]
     value = XTrain[i]
-    result = k_nearest_neighbors(trained_data, value, k=5)
+    result, confidence = k_nearest_neighbors(trained_data, value, k=5)
     if result == key:
         correct += 1
+    else:
+        # algorithm %un-confidency.
+        # Secmedim ama %60 digerine kaydigi icin secmedim
+        print result, confidence
     total += 1
 
 custom_score = correct / total
