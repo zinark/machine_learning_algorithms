@@ -7,10 +7,6 @@ import matplotlib.pyplot as plt
 from sklearn import cross_validation, neighbors
 import random
 
-df = pd.read_csv('data/breast-cancer.data')
-df.replace('?', -99999, inplace=True)
-df = df.astype(float)
-
 
 def k_nearest_neighbors(data, predict, k=3):
     # radius'ten hepsini karsilastirmayabiliriz
@@ -33,40 +29,55 @@ def k_nearest_neighbors(data, predict, k=3):
     return most_common, confidence
 
 
-features = np.array(df.drop(['Class', 'Id'], 1))
-labels = np.array(df['Class'])
+acc_report = {
+    "scikit": [],
+    "custom": []
+}
+for i in range(25):
+    df = pd.read_csv('data/breast-cancer.data')
+    df.replace('?', -99999, inplace=True)
+    df = df.astype(float)
 
-XTrain, XTest, YTrain, YTest = cross_validation.train_test_split(features, labels, test_size=0.3)
-clf = neighbors.KNeighborsClassifier(n_neighbors=5)
-clf.fit(XTrain, YTrain)
-scikit_score = clf.score(XTest, YTest)
+    features = np.array(df.drop(['Class', 'Id'], 1))
+    labels = np.array(df['Class'])
 
-trained_data = {}
+    XTrain, XTest, YTrain, YTest = cross_validation.train_test_split(features, labels, test_size=0.3)
+    clf = neighbors.KNeighborsClassifier(n_neighbors=5, n_jobs=1)
+    clf.fit(XTrain, YTrain)
+    scikit_score = clf.score(XTest, YTest)
 
-for i in range(len(XTrain)):
-    key = YTrain[i]
-    value = XTrain[i]
+    trained_data = {}
 
-    if not trained_data.has_key(key):
-        trained_data[key] = []
-    trained_data[key].append(value)
+    for i in range(len(XTrain)):
+        key = YTrain[i]
+        value = XTrain[i]
 
-correct = 0.
-total = 0.
+        if not trained_data.has_key(key):
+            trained_data[key] = []
+        trained_data[key].append(value)
 
-for i in range(len(XTest)):
-    key = YTrain[i]
-    value = XTrain[i]
-    result, confidence = k_nearest_neighbors(trained_data, value, k=5)
-    if result == key:
-        correct += 1
-    else:
-        # algorithm %un-confidency.
-        # Secmedim ama %60 digerine kaydigi icin secmedim
-        print result, confidence
-    total += 1
+    correct = 0.
+    total = 0.
 
-custom_score = correct / total
+    for i in range(len(XTest)):
+        key = YTrain[i]
+        value = XTrain[i]
+        result, confidence = k_nearest_neighbors(trained_data, value, k=5)
+        if result == key:
+            correct += 1
+        else:
+            # algorithm %un-confidency.
+            # Secmedim ama %60 digerine kaydigi icin secmedim
+            # print result, confidence
+            pass
+        total += 1
 
-print "scikit - knn score = ", scikit_score
-print "custom - knn score = ", custom_score
+    custom_score = correct / total
+
+    print "scikit - knn score = ", scikit_score
+    acc_report["scikit"].append(scikit_score)
+    print "custom - knn score = ", custom_score
+    acc_report["custom"].append(custom_score)
+
+print "scikit - avg = ", np.mean(acc_report["scikit"])
+print "custom - avg = ", np.mean(acc_report["custom"])
