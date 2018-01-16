@@ -1,5 +1,5 @@
 import numpy as np
-from sklearn import cross_validation, svm
+from sklearn import svm, model_selection
 import pandas as pd
 
 df = pd.read_csv("data/breast-cancer.data")
@@ -9,7 +9,7 @@ df.drop(['Id'], 1, inplace=True)
 X = np.array(df.drop(['Class'], 1))
 Y = np.array(df['Class'])
 
-X_train, X_test, Y_train, Y_test = cross_validation.train_test_split(X, Y, test_size=0.2)
+X_train, X_test, Y_train, Y_test = model_selection.train_test_split(X, Y, test_size=0.2)
 
 clf = svm.SVC()
 clf.fit(X_train, Y_train)
