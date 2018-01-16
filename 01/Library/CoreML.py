@@ -1,6 +1,29 @@
 import collections
 import math
 import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib import style
+
+style.use('ggplot')
+
+
+class CoreSVM:
+    def __init__(self, visualize=True):
+        self.w = -9999
+        self.b = -9999
+        self.visualization = visualize
+        self.colors = {1: 'r', -1: 'g'}
+        if visualize:
+            self.fig = plt.figure()
+            self.ax = self.fig.add_subplot(1, 1, 1)
+        pass
+
+    def fit(self, data):  # train
+        pass
+
+    def predict(self, features):
+        # sign (x.w+b)
+        return np.sign(np.dot(np.array(features), self.w) + self.b)
 
 
 class CoreML:
