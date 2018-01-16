@@ -1,4 +1,6 @@
+import collections
 import math
+import numpy as np
 
 
 class CoreML:
@@ -23,3 +25,28 @@ class CoreML:
         for i in range(dimension):
             sumtotal += v1[i] * v2[i]
         return sumtotal
+
+    @staticmethod
+    def knn(data_by_classes, input_data, k=5, radius=None):
+        distances = []
+
+        for group in data_by_classes:
+            for features in data_by_classes[group]:
+
+                diff = np.array(features) - np.array(input_data)
+                euclidean_distance = np.linalg.norm(diff)  # euclidean_distance = np.sqrt(np.sum(diff ** 2))
+
+                if radius and radius <= euclidean_distance:
+                    distances.append([euclidean_distance, group])
+
+                if not radius:
+                    distances.append([euclidean_distance, group])
+
+        distances = sorted(distances, reverse=False)[0:k]
+        labels = map(lambda x: x[1], distances)
+
+        most_common_tuple = collections.Counter(labels).most_common(1)
+        if not most_common_tuple: return 0, 0
+        most_common = most_common_tuple[0][0]
+        confidence = most_common_tuple[0][1] / float(k)
+        return most_common, confidence

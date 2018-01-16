@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 from sklearn import cross_validation, neighbors
 import random
 
+import Library.CoreML
+
 
 def k_nearest_neighbors(data, predict, k=3):
     # radius'ten hepsini karsilastirmayabiliriz
@@ -33,7 +35,7 @@ acc_report = {
     "scikit": [],
     "custom": []
 }
-for i in range(25):
+for i in range(5):
     df = pd.read_csv('data/breast-cancer.data')
     df.replace('?', -99999, inplace=True)
     df = df.astype(float)
@@ -42,7 +44,7 @@ for i in range(25):
     labels = np.array(df['Class'])
 
     XTrain, XTest, YTrain, YTest = cross_validation.train_test_split(features, labels, test_size=0.3)
-    clf = neighbors.KNeighborsClassifier(n_neighbors=5, n_jobs=1)
+    clf = neighbors.KNeighborsClassifier(n_neighbors=5, n_jobs=1, radius=1)
     clf.fit(XTrain, YTrain)
     scikit_score = clf.score(XTest, YTest)
 
@@ -62,7 +64,8 @@ for i in range(25):
     for i in range(len(XTest)):
         key = YTrain[i]
         value = XTrain[i]
-        result, confidence = k_nearest_neighbors(trained_data, value, k=5)
+        #result, confidence = k_nearest_neighbors(trained_data, value, k=5)
+        result, confidence = Library.CoreML.CoreML.knn(trained_data, value, k=5, radius=1)
         if result == key:
             correct += 1
         else:

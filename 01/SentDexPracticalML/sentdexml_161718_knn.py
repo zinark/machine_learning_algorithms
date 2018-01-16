@@ -5,6 +5,8 @@ import matplotlib.pyplot as plt
 from matplotlib import style
 from collections import Counter
 
+import Library.CoreML
+
 print style.available
 style.use('bmh')
 
@@ -14,29 +16,7 @@ dataset = {
 }
 new_features = [5, 7]
 
-
-def k_nearest_neighbors(data, predict, k=3):
-    # radius'ten hepsini karsilastirmayabiliriz
-
-    if len(data) >= k: warnings.warn('not enough data for classifying ' + k + ' items')
-    distances = []
-    for group in data:
-        print group, data[group]
-        for features in data[group]:
-            diff = np.array(features) - np.array(predict)
-            # euclidean_distance = np.sqrt(np.sum(diff ** 2))
-            euclidean_distance = np.linalg.norm(diff)
-            distances.append([euclidean_distance, group])
-
-    distances = sorted(distances, reverse=False)[0:k]
-    labels = map(lambda x: x[1], distances)
-
-    # print distances, labels
-    mostCommon = Counter(labels).most_common(1)
-    return mostCommon[0][0]
-
-
-predict = k_nearest_neighbors(dataset, new_features)
+predict = Library.CoreML.CoreML.knn(dataset, new_features)
 
 
 def plot_results():
