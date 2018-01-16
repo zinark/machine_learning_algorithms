@@ -31,11 +31,10 @@ class CoreML:
         distances = []
 
         for group in data_by_classes:
-            for features in data_by_classes[group]:
-
-                diff = np.array(features) - np.array(input_data)
+            all_features = data_by_classes[group]
+            diffs = np.array(all_features) - np.array(input_data)
+            for diff in diffs:
                 euclidean_distance = np.linalg.norm(diff)  # euclidean_distance = np.sqrt(np.sum(diff ** 2))
-
                 if radius and radius <= euclidean_distance:
                     distances.append([euclidean_distance, group])
 
