@@ -78,9 +78,9 @@ class CoreSVM:
                         # yi (xi . w + b) >= 1
                         for yi in data:
                             for xi in data[yi]:
-                                if not yi * (np.dot(xi, w_t) + b) >= 1:
+                                rule_value = yi * (np.dot(xi, w_t) + b)
+                                if not rule_value >= 1:
                                     found_option = False
-
                         if found_option:
                             opt_dict[np.linalg.norm(w_t)] = [w_t, b]
 

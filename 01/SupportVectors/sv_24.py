@@ -9,6 +9,8 @@ data_dict = {
 
 svm = Library.CoreML.CoreSVM()
 svm.fit(data_dict)
-result = svm.predict([1, 3])
+pts = [[0, 10], [1, 3], [3, 4], [3, 5], [5, 5], [5, 6], [6, -6], [5, 8]]
+for pt in pts:
+    result = svm.predict(pt)
+    print result
 svm.visualize()
-print result
