@@ -124,17 +124,17 @@ class CoreSVM:
         # Positive
         psv1 = hyperplane(hyp_x_min, self.w, self.b, 1)
         psv2 = hyperplane(hyp_x_max, self.w, self.b, 1)
-        self.ax.plot([hyp_x_min, hyp_x_max], [psv1, psv2])
+        self.ax.plot([hyp_x_min, hyp_x_max], [psv1, psv2], c='k')
 
         # Negative
         nsv1 = hyperplane(hyp_x_min, self.w, self.b, -1)
         nsv2 = hyperplane(hyp_x_max, self.w, self.b, -1)
-        self.ax.plot([hyp_x_min, hyp_x_max], [nsv1, nsv2])
+        self.ax.plot([hyp_x_min, hyp_x_max], [nsv1, nsv2], c='k')
 
         # Negative
         db1 = hyperplane(hyp_x_min, self.w, self.b, 0)
         db2 = hyperplane(hyp_x_max, self.w, self.b, 0)
-        self.ax.plot([hyp_x_min, hyp_x_max], [db1, db2])
+        self.ax.plot([hyp_x_min, hyp_x_max], [db1, db2], 'y--')
 
         plt.show()
 

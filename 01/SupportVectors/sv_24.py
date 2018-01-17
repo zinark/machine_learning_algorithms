@@ -9,6 +9,6 @@ data_dict = {
 
 svm = Library.CoreML.CoreSVM()
 svm.fit(data_dict)
-svm.visualize()
 result = svm.predict([1, 3])
+svm.visualize()
 print result
