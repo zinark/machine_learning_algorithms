@@ -92,3 +92,5 @@ print posteriers(px=0.5, pax=0.8, panx=0.5)
 print posteriers(px=0.5, pax=0.8, panx=0.1)
 print posteriers(px=0, pax=0.8, panx=0.1)
 
+
+print posteriers(px=0.4, pax=0.01, panx=0.3)
