@@ -10,7 +10,7 @@ class CoreVector:
             raise ValueError("no coords")
 
         try:
-            self.coords = tuple([Decimal(x) for x in coords])
+            self.coords = ([Decimal(x) for x in coords])
             self.dimension = len(coords)
 
         except ValueError:
@@ -39,6 +39,7 @@ class CoreVector:
 
     def magnitude(self):
         return Decimal(math.sqrt(sum([x ** 2 for x in self.coords])))
+
 
     def normalized(self):
         try:
@@ -71,7 +72,7 @@ class CoreVector:
     def angle_with(self, other, in_degrees=False):
         u1 = self.normalized()
         u2 = other.normalized()
-        dot = round(u1.dot(u2), 5)
+        dot = round(u1.dot(u2), 10)
         result = math.acos(float(dot))
         if in_degrees:
             return math.degrees(result)
