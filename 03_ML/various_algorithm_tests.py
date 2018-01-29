@@ -3,10 +3,11 @@ from pretty_picture import prettyPicture
 from sklearn.naive_bayes import GaussianNB
 from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
-
+from sklearn.tree import DecisionTreeClassifier
 features_train, labels_train, features_test, labels_test = makeTerrainData()
 clf_naive_bayes = GaussianNB()
 clf_support_vector = SVC()
+clf_tree = DecisionTreeClassifier ()
 clf_neural_network = MLPClassifier(
     shuffle=False,
     max_iter=300,
@@ -16,12 +17,13 @@ clf_neural_network = MLPClassifier(
 clf_support_vector.fit(features_train, labels_train)
 clf_naive_bayes.fit(features_train, labels_train)
 clf_neural_network.fit(features_train, labels_train)
+clf_tree.fit(features_train, labels_train)
 
-print clf_naive_bayes.score(features_test, labels_test)
-print clf_support_vector.score(features_test, labels_test)
-print clf_neural_network.score(features_test, labels_test)
-
-prettyPicture(clf_neural_network, features_test, labels_test)
+print "NB =", clf_naive_bayes.score(features_test, labels_test)
+print "SVC=",clf_support_vector.score(features_test, labels_test)
+print "NN =",clf_neural_network.score(features_test, labels_test)
+print "DT =",clf_tree.score(features_test, labels_test)
+prettyPicture(clf_tree, features_test, labels_test)
 
 
 def accuracy_score():
