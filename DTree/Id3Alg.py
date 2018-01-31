@@ -3,8 +3,22 @@ import pandas as pd
 
 
 class Id3Alg(object):
-    def fit(self, data):
+    def __init__(self, data):
         self.data = pd.DataFrame(data)
+
+    def best_attribute(self, class_attr):
+        dt_others = self.data.drop(class_attr, axis=1)
+        dt_class = self.data[class_attr]
+        print dt_class
+        pass
+
+    def predict(self, class_attr, x):
+        done = False
+
+        while not done:
+            print "A = best attribute"
+            A = self.best_attribute(class_attr)
+            done = True
 
     def entropy_from_data(self, data):
         freq = data.value_counts()
@@ -49,7 +63,7 @@ class Id3Alg(object):
             e += p * math.log(p, 2)
         return -e
 
-    def predict(self, class_attr, x):
+    def predict_old(self, class_attr, x):
         tree = {}
         dt = self.data
 
@@ -81,3 +95,53 @@ class Id3Alg(object):
 
         print to_iterate_attr
         print tree
+
+    def build_tree(self, class_attr):
+        dt = self.data
+        print dt
+        print self.calc_entropy(dt[class_attr])
+        print "o", self.calc_p(dt[class_attr])
+
+        # decided_attr = dt["X"]
+        # p_attr = self.calc_p(decided_attr)
+        # print "x", p_attr
+        # vals = decided_attr.unique()
+        # for val in vals:
+        #     class_values = dt[decided_attr == val][class_attr]
+        #     print "e(class_values,",val,")=", self.calc_entropy(class_values)
+
+        for val in dt["X"].unique():
+            print self.calc_entropy_on_attr("X", val, class_attr)
+
+        # print self.calc_entropy(dt["Y"])
+        # print "y", self.calc_p(dt["Y"])
+
+    def calc_entropy_on_attr(self, attr, val, class_attr):
+        dt = self.data
+        decided_attr = dt[attr]
+        possibilities = self.calc_p(decided_attr)
+        print attr, possibilities
+        vals = decided_attr.unique()
+        for val in vals:
+            class_values = dt[decided_attr == val][class_attr]
+            print "e(class_values,", val, ")=", self.calc_entropy(class_values)
+
+    def calc_entropy(self, series):
+        vals = series.values
+        freq = series.value_counts()
+        total = len(vals)
+        e = 0.
+        for value, frequency in freq.iteritems():
+            p = 1. * frequency / total
+            e += p * math.log(p, 2)
+        return -e
+
+    def calc_p(self, series):
+        vals = series.values
+        freq = series.value_counts()
+        total = len(vals)
+        result = []
+        for value, frequency in freq.iteritems():
+            p = 1. * frequency / total
+            result.append(p)
+        return result
