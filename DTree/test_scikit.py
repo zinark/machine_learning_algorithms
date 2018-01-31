@@ -191,10 +191,21 @@ def chart_iris():
     xx, yy = np.meshgrid(x_range, y_range)
     z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
     z = z.reshape(xx.shape)
-    print z
     plt.contourf(xx, yy, z, cmap='afmhot', alpha=0.3)
     plot_data(dt)
     plt.show()
+
+    # http://www.webgraphviz.com/
+    # dot -Tpng tree.dot > tree.png
+    from sklearn.tree import export_graphviz
+    dot_data = export_graphviz(clf,
+                               out_file="tree.dot",
+                               feature_names=iris.feature_names[2:],
+                               class_names=iris.target_names,
+                               rounded=False,
+                               filled=True
+                               )
+
 
 
 chart_iris()
