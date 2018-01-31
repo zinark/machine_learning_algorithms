@@ -186,10 +186,10 @@ def chart_iris():
     iris = load_iris()
     dt = convert_to_dataframe(iris)
     training_x, training_y = create_training_data(dt)
-    clf = tree.DecisionTreeClassifier()
+    clf = tree.DecisionTreeClassifier(criterion='gini')
     clf.fit(training_x, training_y)
-    x_range = np.arange(0.5, 7, 0.01)
-    y_range = np.arange(0, 3, 0.01)
+    x_range = np.arange(4, 8, 0.01)
+    y_range = np.arange(1, 4, 0.01)
     xx, yy = np.meshgrid(x_range, y_range)
     z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
     z = z.reshape(xx.shape)
@@ -198,7 +198,7 @@ def chart_iris():
     plt.show()
 
     # http://www.webgraphviz.com/
-    # dot -Tpng tree.dot > tree.png
+    # dot -Tpng tree.dot > tree_entropy.png
     from sklearn.tree import export_graphviz
     dot_data = export_graphviz(clf,
                                out_file="tree.dot",
