@@ -152,14 +152,16 @@ def chart_iris():
     from sklearn.datasets import load_iris
     import matplotlib.pyplot as plt
     from sklearn.tree import tree
+    x1_input = "sepal length (cm)"
+    x2_input = "sepal width (cm)"
 
     def create_training_data(dt):
-        training_data = dt[["petal length (cm)", "petal width (cm)", "target"]]
+        training_data = dt[[x1_input, x2_input, "target"]]
         training_x = []
         training_y = []
         for i, row in training_data.iterrows():
-            x1 = row["petal length (cm)"]
-            x2 = row["petal width (cm)"]
+            x1 = row[x1_input]
+            x2 = row[x2_input]
             y = row["target"]
             training_x.append([x1, x2])
             training_y.append(y)
@@ -174,11 +176,11 @@ def chart_iris():
     def plot_data(dt):
         for t in dt["target"].unique():
             label = iris.target_names[t]
-            x = dt[dt["target"] == t]["petal length (cm)"].values
-            y = dt[dt["target"] == t]["petal width (cm)"].values
+            x = dt[dt["target"] == t][x1_input].values
+            y = dt[dt["target"] == t][x2_input].values
             plt.scatter(x, y, label=label, s=10)
-        plt.xlabel("petal length")
-        plt.ylabel("petal width")
+        plt.xlabel(x1_input)
+        plt.ylabel(x2_input)
         plt.legend()
 
     iris = load_iris()
@@ -200,7 +202,7 @@ def chart_iris():
     from sklearn.tree import export_graphviz
     dot_data = export_graphviz(clf,
                                out_file="tree.dot",
-                               feature_names=iris.feature_names[2:],
+                               feature_names=iris.feature_names[:2],
                                class_names=iris.target_names,
                                rounded=False,
                                filled=True
