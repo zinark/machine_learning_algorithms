@@ -10,7 +10,19 @@ from sklearn.linear_model import RANSACRegressor
 df = pd.read_csv("boston.csv")
 print df.head()
 X = df["rm"].values.reshape(-1, 1)
+# print df.iloc[:, :-1].values
+# X = df[:].values
+# X = df.iloc[:, :-1].values
+
+# cols = [u'crim', u'indus', u'chas', u'nox', u'rm', u'age', u'dis', u'rad', u'tax', u'ptratio', u'b', u'lstat']
+
+
+cols = df.columns.tolist()
+cols.remove("medv")
+X = df[cols].values
 y = df["medv"].values
+
+# cols = [u'crim', u'zn', u'indus', u'chas', u'nox', u'rm', u'age', u'dis', u'rad', u'tax', u'ptratio', u'b', u'lstat']
 
 # Cross validation
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
@@ -50,9 +62,6 @@ def Diff():
     plt.show()
 
 
-Diff()
-
-
 def NearlyPerfect():
     global y, X, X_train, X_test, y_train, y_test
     # Bad Model
@@ -60,24 +69,25 @@ def NearlyPerfect():
     lr.fit(X_train, y_train)
     y_train_pred = lr.predict(X_train)
     y_test_pred = lr.predict(X_test)
-    # Nearly Perfect Model
-    rnd = np.random.RandomState(0)
-    x = 10 * rnd.rand(1000)
-    y = x * 3 + rnd.rand(1000)
-    X = x.reshape(-1, 1)
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
-    lr = LinearRegression()
-    lr.fit(X, y)
-    y_train_pred = lr.predict(X_train)
-    y_test_pred = lr.predict(X_test)
+
+    # # Nearly Perfect Model
+    # rnd = np.random.RandomState(0)
+    # x = 10 * rnd.rand(1000)
+    # y = x * 3 + rnd.rand(1000)
+    # X = x.reshape(-1, 1)
+    # X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+    # lr = LinearRegression()
+    # lr.fit(X, y)
+    # y_train_pred = lr.predict(X_train)
+    # y_test_pred = lr.predict(X_test)
     # Residual Analysis
     plt.scatter(y_train_pred, y_train_pred - y_train, c='blue', marker='o', label='Training data')
     plt.scatter(y_test_pred, y_test_pred - y_test, c='orange', marker='*', label='Test data')
     plt.xlabel("training predictions")
     plt.ylabel("residuals (difference) |prediction - actual|")
     plt.hlines(y=0, xmin=-10, xmax=50, lw=2, color='k')
-    plt.xlim([-10, 50])
-    plt.ylim([-25, 25])
+    # plt.xlim([-10, 50])
+    # plt.ylim([-25, 25])
     plt.grid(linestyle=':')
     plt.legend()
     plt.show()
@@ -89,3 +99,6 @@ def NearlyPerfect():
     from sklearn.metrics import r2_score
     print "r2_score of train:", r2_score(y_train, y_train_pred)
     print "r2_score of test:", r2_score(y_test, y_test_pred)
+
+
+NearlyPerfect()
