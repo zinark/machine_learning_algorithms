@@ -6,7 +6,7 @@ import sympy as sp
 
 from Util import Util
 
-df = Util.grad_descent("x**4+x**2", start_x=5)
+df = Util.grad_descent("x**4+x**2", start_x=-5, learning_rate=0.01)
 print df
 plt.figure(figsize=(4, 4))
 l = np.linspace(-5, 5, 100)
