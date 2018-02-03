@@ -26,30 +26,58 @@ def plot(xlist, ylist, c='green', l='data'):
     plt.legend()
 
 
-def gradientDescent(x, y, theta, learning_rate, m, max_iter):
+def gradientDescent(x, y, theta, learning_rate, m, max_iter, debug=False):
     x_transposed = x.transpose()
+
     for i in range(max_iter):
-        hypothesis = np.dot(x, theta)
-        loss = hypothesis - y
-        # cost = np.sum(loss ** 2) / (2 * m)
-        # print("%d | Cost: %f" % (i, cost))
+        if debug:
+            print "iteration = ", i+1
+            print
+            print "\t", "theta"
+            print "\t\t=", theta
+
+        y_pred = np.dot(x, theta)
+        loss = y_pred - y
         gradient = np.dot(x_transposed, loss) / m
 
-        # refresh theta
+        if debug:
+            print "\t", "y_pred = theta . x"
+            print "\t\t=", theta, ".", x
+            print "\t\t=", y_pred
+            print
+
+            print "\t", "loss = x . theta - y"
+            print "\t\t=", y_pred, "-", y
+            print "\t\t=", loss
+            print
+
+            print "\t", "gradient = (x_t . loss) / m"
+            print "\t\t=", x_transposed, ".", loss, "/", m
+            print "\t\t=", gradient
+            print
+
+        # cost = np.sum(loss ** 2) / (2 * m)
+        # print("%d | Cost: %f" % (i, cost))
+
+        if debug:
+            print "\t", "theta  = theta - learning_rate * gradient"
+            print "\t\t=", theta, " - ", learning_rate * gradient
+            print "\t\t=", theta - learning_rate * gradient
+            print
+
         theta = theta - learning_rate * gradient
     return theta
 
 
-x, y = X_std, y_std
+# x, y = np.array([[1],[2],[3]]), np.array([5, 4, 7])
+x,y = X_std, y_std
 m, n = np.shape(x)
-max_iter = 50000
-learning_rate = 0.0005
+max_iter = 10000
+learning_rate = 0.001
 theta = np.ones(n)
-theta = gradientDescent(x, y, theta, learning_rate, m, max_iter)
+theta = gradientDescent(x, y, theta, learning_rate, m, max_iter, debug=False)
 
-print "x", x
-print "y", y
-print "theta", theta
+print "RESULT theta", theta
 
 plt.subplot(121)
 plot(x, y, 'red', 'actuals')
