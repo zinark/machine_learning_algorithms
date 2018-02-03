@@ -8,7 +8,7 @@ data_boston = load_boston()
 
 df = pd.DataFrame(data_boston.data, columns=data_boston.feature_names)
 
-X = df[["LSTAT"]].values[:]
+X = df.values[:]
 y = data_boston.target[:]
 
 from sklearn.preprocessing import StandardScaler
@@ -72,17 +72,17 @@ def gradientDescent(x, y, theta, learning_rate, m, max_iter, debug=False):
 # x, y = np.array([[1],[2],[3]]), np.array([5, 4, 7])
 x,y = X_std, y_std
 m, n = np.shape(x)
-max_iter = 10000
-learning_rate = 0.001
+max_iter = 100000
+learning_rate = 0.0001
 theta = np.ones(n)
 theta = gradientDescent(x, y, theta, learning_rate, m, max_iter, debug=False)
 
 print "RESULT theta", theta
 
-plt.subplot(121)
-plot(x, y, 'red', 'actuals')
-
-plt.subplot(122)
-plot(x, x.dot(theta), 'green', 'predictions')
-
-plt.show()
+# plt.subplot(121)
+# plot(x, y, 'red', 'actuals')
+#
+# plt.subplot(122)
+# plot(x, x.dot(theta), 'green', 'predictions')
+#
+# plt.show()
