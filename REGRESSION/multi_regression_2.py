@@ -34,4 +34,16 @@ def measure_regression():
     result = np.abs(result).sort_values(by='coefficient', ascending=False)
     print result
 
+
 print Util.top_coefficiants(df, y)
+
+from sklearn.linear_model import LinearRegression
+
+df = df[["LSTAT", "DIS", "RM", "RAD", "TAX", "PTRATIO", "NOX", "ZN", "CRIM", "B", "CHAS"]]
+m = LinearRegression()
+m.fit(df.values, y)
+print m.score(df.values, y)
+# Graph.residual_graph(y, m.predict(df.values))
+
+# 0.740607742865
+# 0.740545352046
