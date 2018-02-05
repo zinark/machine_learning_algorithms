@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import random
 
 data_boston = load_boston()
-
 df = pd.DataFrame(data_boston.data, columns=data_boston.feature_names)
 
 X = df.values[:]

@@ -4,8 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 
-from Graph import Graph
-from Util import Util
+from BSE.Util import Util
 
 boston = load_boston()
 df = pd.DataFrame(data=boston.data, columns=boston.feature_names)

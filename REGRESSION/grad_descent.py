@@ -1,7 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 
-from Util import Util
+from BSE.Util import Util
 
 df = Util.grad_descent("x**4+x**2", start_x=5, learning_rate=0.1)
 print df

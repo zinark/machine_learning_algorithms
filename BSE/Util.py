@@ -20,7 +20,7 @@ class Util(object):
         return pd.DataFrame(d, columns=["coeff", "name"]).set_index("name").sort_values(by="coeff", ascending=False)
 
     @staticmethod
-    def grad_descent(cost_func_exp, learning_rate=.1, start_x=5., max_iter=100):
+    def grad_descent_f(cost_func_exp, learning_rate=.1, start_x=5., max_iter=100):
         from sympy.parsing.sympy_parser import parse_expr
         x = sp.symbols("x")
         f = parse_expr(cost_func_exp)
@@ -42,3 +42,21 @@ class Util(object):
 
         df = pd.DataFrame(results)
         return df
+
+    @staticmethod
+    def grad_descent(X, y, learning_rate=0.01, max_iter=1000):
+        assert isinstance(X, np.ndarray)
+        assert isinstance(y, np.ndarray)
+        m, n = X.shape
+        theta = np.zeros(n)
+        x_transposed = X.transpose()
+        cost_history = []
+        for i in range(max_iter):
+            y_pred = np.dot(X, theta)
+            loss = y_pred - y
+            delta_theta = np.dot(x_transposed, loss) / m
+            cost = np.sum(loss ** 2) / (2 * m)
+            cost_history.append([theta, cost])
+            theta = theta - learning_rate * delta_theta
+
+        return theta, cost_history
