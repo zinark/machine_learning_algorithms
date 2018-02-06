@@ -60,3 +60,23 @@ class Util(object):
             theta = theta - learning_rate * delta_theta
 
         return theta, cost_history
+
+    @staticmethod
+    def linear_regression_on_matrices(X, y):
+        w = np.linalg.solve(X.transpose().dot(X), X.transpose().dot(y))
+        ypred = X.dot(w)
+        delta_y = y - ypred
+        delta_all = y - y.mean()
+        r2 = 1. - delta_y.dot(delta_y) / delta_all.dot(delta_all)
+        return w, r2
+
+    @staticmethod
+    def linear_regression_on_vectors(X, Y):
+        denom = X.dot(X) - X.mean() * X.sum()
+        a = (X.dot(Y) - Y.mean() * X.sum()) / denom
+        b = (Y.mean() * X.dot(X) - X.mean() * X.dot(Y)) / denom
+        y_pred = a * X + b
+        residual = Y - y_pred
+        total = Y - Y.mean()
+        r2_score = 1 - residual.dot(residual) / total.dot(total)
+        return a, b, r2_score
