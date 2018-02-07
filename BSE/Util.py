@@ -71,12 +71,12 @@ class Util(object):
         return w, r2
 
     @staticmethod
-    def linear_regression_on_vectors(X, Y):
+    def linear_regression_on_vectors(X, y):
         denom = X.dot(X) - X.mean() * X.sum()
-        a = (X.dot(Y) - Y.mean() * X.sum()) / denom
-        b = (Y.mean() * X.dot(X) - X.mean() * X.dot(Y)) / denom
+        a = (X.dot(y) - y.mean() * X.sum()) / denom
+        b = (y.mean() * X.dot(X) - X.mean() * X.dot(y)) / denom
         y_pred = a * X + b
-        residual = Y - y_pred
-        total = Y - Y.mean()
+        residual = y - y_pred
+        total = y - y.mean()
         r2_score = 1 - residual.dot(residual) / total.dot(total)
         return a, b, r2_score
