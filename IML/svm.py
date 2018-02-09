@@ -11,13 +11,10 @@ df["OUT"] = iris.target
 X = df[["l", "w"]].values
 y = df["OUT"].values
 
-clf = svm.SVC()
+clf = svm.SVC(kernel='rbf', gamma=50, C=100)
+# clf = svm.SVC(kernel='linear', gamma=1)
 clf.fit(X, y)
 
-for x in X:
-    y_pred = clf.predict([x])[0]
-    print x, y_pred
-    plt.scatter(x[0], x[1])
 for cls in df["OUT"].unique():
     x_coord = df[df["OUT"] == cls]["l"].values
     y_coord = df[df["OUT"] == cls]["w"].values
@@ -26,12 +23,13 @@ for cls in df["OUT"].unique():
     plt.scatter(x_coord, y_coord, label=str(cls))
 plt.legend()
 
-x_range = np.arange(2.5, 8, 0.01)
-y_range = np.arange(0, 8, 0.01)
+x_range = np.arange(4, 8, 0.01)
+y_range = np.arange(1, 5, 0.01)
 xx, yy = np.meshgrid(x_range, y_range)
 z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
 z = z.reshape(xx.shape)
-plt.contourf(xx, yy, z, cmap='afmhot', alpha=0.3)
+plt.contourf(xx, yy, z, cmap='Paired', alpha=0.2)
+
 
 plt.show()
 #
