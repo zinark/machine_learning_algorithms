@@ -112,3 +112,5 @@ def gini_vs_entropy():
     plt.xlabel('p(i=1)')
     plt.ylabel('Impurity Index')
     plt.show()
+
+chart_iris()
