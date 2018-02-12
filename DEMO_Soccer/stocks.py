@@ -6,10 +6,11 @@ import datetime
 from Integration import Integration
 plt.figure(figsize=(20, 8))
 #Kozal.e tupras.e sasa.e
-# code = "KOZAL.E"
-code = "SASA.E"
-df = Integration.get_stock("2017.csv", code=code)
-df_test = Integration.get_stock("2018.csv", code=code)
+code = "KOZAL.E"
+# code = "ADBGR.E"
+# Integration.dump(2015)
+df = Integration.get_stock("2016.csv", code=code)
+df_test = Integration.get_stock("2017.csv", code=code)
 print df
 
 alpha = 10
@@ -44,12 +45,17 @@ for i in range(len(df)):
         pick_ys.append(-1)
 
 from sklearn.neural_network import MLPClassifier
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
 
 clf = MLPClassifier(random_state=1,
                     max_iter=1000,
-                    hidden_layer_sizes=(2000, 100),
+                    hidden_layer_sizes=(3000, 300),
                     solver='lbfgs',
                     activation='relu')
+
+clf = RandomForestClassifier()
+
 X = np.array(pick_xs)
 Y = np.array(pick_ys)
 clf.fit(X, Y)
@@ -57,7 +63,7 @@ clf.fit(X, Y)
 
 plt.subplot(211)
 plt.plot(xs, ys, linewidth=.3)
-plt.scatter(xs, pick_ys, color='red', s=5)
+plt.plot(xs, pick_ys, color='orange', linewidth=0.7)
 plt.title(code)
 plt.grid(ls=":")
 
@@ -97,9 +103,9 @@ plt.scatter(xs_test, y_pred, c='red')
 
 
 accuracy = 0.
-leny = len(ys_pick_test)
+leny = len(ys_pick_test) - alpha
 for i in range(leny):
-    if ys_pick_test[i] == y_pred[i]:
+    if ys_pick_test[alpha + i] == y_pred[alpha + i]:
         accuracy+=1
 accuracy = accuracy/leny
 print "%", accuracy
