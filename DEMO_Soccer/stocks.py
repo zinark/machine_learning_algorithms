@@ -4,16 +4,17 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 import datetime
 from Integration import Integration
-plt.figure(figsize=(20, 8))
+plt.figure(figsize=(14, 7))
 #Kozal.e tupras.e sasa.e
-code = "KOZAL.E"
-# code = "ADBGR.E"
-# Integration.dump(2015)
-df = Integration.get_stock("2016.csv", code=code)
-df_test = Integration.get_stock("2017.csv", code=code)
+# code = "KOZAL.E"
+code = "ADBGR.E"
+# Integration.dump_range("test.csv", datetime.date (2017, 12, 1), datetime.date.today())
+# Integration.dump_range("train.csv", datetime.date (2012, 1, 1), datetime.date (2017, 12, 1))
+df = Integration("train.csv").get_stock(code)
+df_test = Integration("test.csv").get_stock(code)
 print df
 
-alpha = 10
+alpha = 30
 
 xs = []
 ys = []
@@ -47,14 +48,23 @@ for i in range(len(df)):
 from sklearn.neural_network import MLPClassifier
 from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import AdaBoostClassifier
+from sklearn.ensemble import BaggingClassifier
 
-clf = MLPClassifier(random_state=1,
-                    max_iter=1000,
-                    hidden_layer_sizes=(3000, 300),
-                    solver='lbfgs',
+np.random.seed(8219)
+clf_mlp = MLPClassifier(
+                    max_iter=2000,
+                    # learning_rate='adaptive',
+                    hidden_layer_sizes=(1000, ),
+                    solver='adam',
                     activation='relu')
 
-clf = RandomForestClassifier()
+clf_tree = RandomForestClassifier(n_estimators=100, min_samples_split=4)
+
+
+# clf = AdaBoostClassifier (random_state=1, n_estimators=1000, learning_rate=.01)
+clf = BaggingClassifier (base_estimator=clf_mlp,
+                         n_estimators=11)
 
 X = np.array(pick_xs)
 Y = np.array(pick_ys)
@@ -64,7 +74,7 @@ clf.fit(X, Y)
 plt.subplot(211)
 plt.plot(xs, ys, linewidth=.3)
 plt.plot(xs, pick_ys, color='orange', linewidth=0.7)
-plt.title(code)
+plt.title(type(clf).__name__)
 plt.grid(ls=":")
 
 xs_test = []
@@ -96,7 +106,7 @@ for i in range(len(df_test)):
 
 plt.subplot(212)
 plt.plot(xs_test, ys_test, linewidth=.3)
-plt.plot(xs_test, ys_pick_test, linewidth=.3)
+plt.plot(xs_test, ys_pick_test, linewidth=2)
 
 y_pred = clf.predict(xs_pick_test)
 plt.scatter(xs_test, y_pred, c='red')
@@ -112,5 +122,5 @@ print "%", accuracy
 
 plt.title("acc {0:0.3f}".format(accuracy))
 plt.grid(ls=":")
-
+plt.suptitle (str(code))
 plt.show()

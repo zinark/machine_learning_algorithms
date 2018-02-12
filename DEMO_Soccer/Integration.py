@@ -1,11 +1,19 @@
 import pandas as pd
 import urllib, json, urllib2, zipfile, io
 
-from datetime import datetime
+from datetime import datetime, date, timedelta
 
 
 class Integration(object):
     url = "http://www.borsaistanbul.com/data/thb/{0}/{1}/thb{0}{1}{2}{3}.zip"
+
+    def __init__(self, file):
+        df = pd.read_csv(file, sep="\t")
+        df = df[["TARIH", "ISLEM  KODU", "DEGISIM (%)"]]
+        no = [x for x in range(len(df))]
+        df["no"] = no
+        df.columns = ["date", "code", "diff", "no"]
+        self.df = df
 
     @staticmethod
     def get(year, month, day):
@@ -39,27 +47,40 @@ class Integration(object):
             f.flush()
 
     @staticmethod
-    def dump(year):
+    def dump(filename="output.csv", years=[2017]):
         list = []
-        for m in range(1, 12):
-            for d in range(1, 31):
-                try:
-                    df = Integration.get(year, m, d).iloc[1:]
-                    list.append(df)
-                except:
-                    pass
+        for year in years:
+            for m in range(1, 12):
+                for d in range(1, 31):
+                    try:
+                        df = Integration.get(year, m, d).iloc[1:]
+                        list.append(df)
+                    except:
+                        pass
 
         df = pd.concat(list)
-        df.to_csv(str(year) + ".csv", sep='\t', encoding='utf-8', index=False)
+        df.to_csv(filename, sep='\t', encoding='utf-8', index=False)
 
     @staticmethod
-    def get_stock(file, code="ADEL.E"):
-        df = pd.read_csv(file, sep="\t")
-        df = df[["TARIH", "ISLEM  KODU", "DEGISIM (%)"]]
-        df = df[df["ISLEM  KODU"] == code]
-        no = [x for x in range(len(df))]
-        df["no"] = no
+    def dump_range(filename="output.csv", d1=datetime.today(), d2=datetime.today()):
+        delta = d2 - d1
+        dates = [d1 + timedelta(days=x) for x in range((d2 - d1).days + 1)]
+        list = []
 
-        df.columns = ["date", "code", "diff", "no"]
+        for dt in dates:
+            m = dt.month
+            d = dt.day
+            y = dt.year
+            try:
+                df = Integration.get(y, m, d).iloc[1:]
+                list.append(df)
+            except:
+                pass
 
-        return df
+        df = pd.concat(list)
+        df.to_csv(filename, sep='\t', encoding='utf-8', index=False)
+
+    def get_stock(self, code="ADEL.E"):
+        df = self.df
+        result = df[df["code"] == code]
+        return result
