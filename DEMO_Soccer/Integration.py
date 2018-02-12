@@ -22,6 +22,7 @@ class Integration(object):
         csv = zip.read(zip.infolist()[0])
         csv = unicode(csv, "utf-8")
         df = pd.read_csv(io.StringIO(csv), sep=";")
+
         return df
 
     @staticmethod
@@ -36,3 +37,29 @@ class Integration(object):
             f.write(r)
             f.write("\n")
             f.flush()
+
+    @staticmethod
+    def dump(year):
+        list = []
+        for m in range(1, 12):
+            for d in range(1, 31):
+                try:
+                    df = Integration.get(year, m, d).iloc[1:]
+                    list.append(df)
+                except:
+                    pass
+
+        df = pd.concat(list)
+        df.to_csv(str(year) + ".csv", sep='\t', encoding='utf-8', index=False)
+
+    @staticmethod
+    def get_stock(file, code="ADEL.E"):
+        df = pd.read_csv(file, sep="\t")
+        df = df[["TARIH", "ISLEM  KODU", "DEGISIM (%)"]]
+        df = df[df["ISLEM  KODU"] == code]
+        no = [x for x in range(len(df))]
+        df["no"] = no
+
+        df.columns = ["date", "code", "diff", "no"]
+
+        return df
