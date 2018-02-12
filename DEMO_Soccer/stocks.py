@@ -12,7 +12,7 @@ df = Integration.get_stock("2017.csv", code=code)
 df_test = Integration.get_stock("2018.csv", code=code)
 print df
 
-alpha = 7
+alpha = 10
 
 xs = []
 ys = []
@@ -45,7 +45,11 @@ for i in range(len(df)):
 
 from sklearn.neural_network import MLPClassifier
 
-clf = MLPClassifier(hidden_layer_sizes=(1000, 1000), solver='lbfgs', activation='relu')
+clf = MLPClassifier(random_state=1,
+                    max_iter=1000,
+                    hidden_layer_sizes=(2000, 100),
+                    solver='lbfgs',
+                    activation='relu')
 X = np.array(pick_xs)
 Y = np.array(pick_ys)
 clf.fit(X, Y)
@@ -54,7 +58,7 @@ clf.fit(X, Y)
 plt.subplot(211)
 plt.plot(xs, ys, linewidth=.3)
 plt.scatter(xs, pick_ys, color='red', s=5)
-plt.title("tr")
+plt.title(code)
 plt.grid(ls=":")
 
 xs_test = []
@@ -91,14 +95,16 @@ plt.plot(xs_test, ys_pick_test, linewidth=.3)
 y_pred = clf.predict(xs_pick_test)
 plt.scatter(xs_test, y_pred, c='red')
 
-plt.title("ts")
-plt.grid(ls=":")
-plt.show()
 
 accuracy = 0.
 leny = len(ys_pick_test)
 for i in range(leny):
     if ys_pick_test[i] == y_pred[i]:
         accuracy+=1
+accuracy = accuracy/leny
+print "%", accuracy
 
-print "%", accuracy/leny
+plt.title("acc {0:0.3f}".format(accuracy))
+plt.grid(ls=":")
+
+plt.show()
