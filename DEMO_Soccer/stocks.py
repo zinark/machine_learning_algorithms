@@ -4,11 +4,15 @@ import matplotlib.pyplot as plt
 from sklearn.linear_model import LinearRegression
 import datetime
 from Integration import Integration
-
-code = "ADANA.E"
+plt.figure(figsize=(20, 8))
+#Kozal.e tupras.e sasa.e
+# code = "KOZAL.E"
+code = "SASA.E"
 df = Integration.get_stock("2017.csv", code=code)
 df_test = Integration.get_stock("2018.csv", code=code)
 print df
+
+alpha = 7
 
 xs = []
 ys = []
@@ -19,7 +23,7 @@ for i in range(len(df)):
     no = df.iloc[i]["no"]
     diff = df.iloc[i]["diff"]
     diff_prev = 2018715
-    alpha = 21
+
     if i >= alpha:
         diff_prev = df.iloc[i - 1]["diff"]
         rlist=[]
@@ -41,7 +45,7 @@ for i in range(len(df)):
 
 from sklearn.neural_network import MLPClassifier
 
-clf = MLPClassifier(hidden_layer_sizes=(100, 100), random_state=1, solver='lbfgs', activation='relu')
+clf = MLPClassifier(hidden_layer_sizes=(1000, 1000), solver='lbfgs', activation='relu')
 X = np.array(pick_xs)
 Y = np.array(pick_ys)
 clf.fit(X, Y)
@@ -61,7 +65,6 @@ for i in range(len(df_test)):
     no = df_test.iloc[i]["no"]
     diff = df_test.iloc[i]["diff"]
     diff_prev = 2018715
-    alpha = 21
     if i >= alpha:
         diff_prev = df_test.iloc[i - 1]["diff"]
         rlist=[]
@@ -83,6 +86,7 @@ for i in range(len(df_test)):
 
 plt.subplot(212)
 plt.plot(xs_test, ys_test, linewidth=.3)
+plt.plot(xs_test, ys_pick_test, linewidth=.3)
 
 y_pred = clf.predict(xs_pick_test)
 plt.scatter(xs_test, y_pred, c='red')
@@ -90,3 +94,11 @@ plt.scatter(xs_test, y_pred, c='red')
 plt.title("ts")
 plt.grid(ls=":")
 plt.show()
+
+accuracy = 0.
+leny = len(ys_pick_test)
+for i in range(leny):
+    if ys_pick_test[i] == y_pred[i]:
+        accuracy+=1
+
+print "%", accuracy/leny
