@@ -9,8 +9,8 @@ with open("./LeagueStageFixture.json") as f:
     dt = json_normalize(dt)
 
 values = {
-    "home" : [],
-    "away" : [],
+    "home": [],
+    "away": [],
     "score": [],
 }
 labels = []
@@ -42,4 +42,3 @@ data = pd.DataFrame(values)
 print data
 # dt = pd.read_json("LeagueStageFixture.json")
 # http://www.posta.com.tr/api/LiveScore/LeagueStage?TournamentID=1&includeTable=1
-
