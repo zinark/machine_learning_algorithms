@@ -8,12 +8,13 @@ class Integration(object):
     url = "http://www.borsaistanbul.com/data/thb/{0}/{1}/thb{0}{1}{2}{3}.zip"
 
     def __init__(self, file):
-        df = pd.read_csv(file, sep="\t")
-        df = df[["TARIH", "ISLEM  KODU", "DEGISIM (%)"]]
-        no = [x for x in range(len(df))]
-        df["no"] = no
-        df.columns = ["date", "code", "diff", "no"]
+        df = pd.read_csv(file, sep="\t", na_values=["nan"], parse_dates=True) #index_col="date"
+        df = df[["TARIH", "ISLEM  KODU", "DEGISIM (%)", "ACILIS FIYATI", "EN YUKSEK FIYAT", "EN DUSUK FIYAT",
+                 "KAPANIS FIYATI", "GUNORTASI MUZAYEDE ISLEM HACMI", "KAPANIS SEANSI FIYATI"]]
+        df.columns = ["date", "code", "diff", "open", "high", "low", "close", "volume", "adj.close"]
+        df["diff"] = df["diff"] / 100.
         self.df = df
+
 
     @staticmethod
     def get(year, month, day):
@@ -63,7 +64,6 @@ class Integration(object):
 
     @staticmethod
     def dump_range(filename="output.csv", d1=datetime.today(), d2=datetime.today()):
-        delta = d2 - d1
         dates = [d1 + timedelta(days=x) for x in range((d2 - d1).days + 1)]
         list = []
 
@@ -71,16 +71,24 @@ class Integration(object):
             m = dt.month
             d = dt.day
             y = dt.year
+
             try:
                 df = Integration.get(y, m, d).iloc[1:]
+                print len(df), "lines"
                 list.append(df)
-            except:
+
+            except StandardError as e:
+                print "ERROR", e
                 pass
 
         df = pd.concat(list)
         df.to_csv(filename, sep='\t', encoding='utf-8', index=False)
 
+    def get_all(self):
+        return self.df
+
     def get_stock(self, code="ADEL.E"):
         df = self.df
-        result = df[df["code"] == code]
+        result = df[df["code"] == code].sort_values(by="date", ascending=True)
+
         return result
