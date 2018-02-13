@@ -34,6 +34,7 @@ class StockQuery(object):
         if normalize:
             df = df / df.ix[0, :]
 
+        df = df.fillna(method='ffill').fillna(method='backfill')
         return df
 
     def list_codes(self):

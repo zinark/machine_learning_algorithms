@@ -30,4 +30,12 @@ cr = q.cumulative_return(df)
 # print df.head()
 # print dr.head()
 # print cr.head()
-print df.join (cr).join(dr)
+df.columns = ["base"]
+df2 = df.join (cr)
+df2.columns = ["base", "cr"]
+df3 = df2.join(dr)
+df3.columns = ["base", "cr", "dr"]
+print df3
+dr.hist()
+plt.show()
+
