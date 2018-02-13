@@ -3,6 +3,7 @@ import pandas as pd
 from Integration import Integration
 import matplotlib.pyplot as plt
 
+
 class StockQuery(object):
     def __init__(self, file):
         src = Integration(file)
@@ -25,3 +26,12 @@ class StockQuery(object):
         if normalize:
             df = df / df.ix[0, :]
         return df
+
+    def list_codes(self):
+        return self.q["code"].unique().tolist()
+
+    def bollinger_bands(self, X):
+        rollingmean = pd.rolling_mean(X, window=20)
+        rollingstd = pd.rolling_std(X, window=20)
+
+        return rollingmean, rollingstd, rollingmean - rollingstd, rollingmean + rollingstd
