@@ -9,6 +9,14 @@ class StockQuery(object):
         src = Integration(file)
         self.q = src.get_all()
 
+    def daily_returns(self, df):
+        dr = (df / df.shift(1)) - 1
+        dr.ix[0, :] = 0
+        return dr
+
+    def cumulative_return(self, df):
+        return (df / df.ix[0, :]) - 1
+
     def list_stocks(self, codes=["ULKER.E", "AKBNK.E", "BIMAS.E"], date1=None, date2=None, normalize=False):
         date_1 = date(2018, 1, 1)
         date_2 = date.today()
@@ -25,6 +33,7 @@ class StockQuery(object):
             df = df.join(df_temp, how='inner')
         if normalize:
             df = df / df.ix[0, :]
+
         return df
 
     def list_codes(self):
