@@ -31,7 +31,7 @@ class StockQuery(object):
         return self.q["code"].unique().tolist()
 
     def bollinger_bands(self, X):
-        rollingmean = pd.rolling_mean(X, window=20)
-        rollingstd = pd.rolling_std(X, window=20)
+        rollingmean = X.rolling(10).mean()
+        rollingstd = X.rolling(10).std()
 
-        return rollingmean, rollingstd, rollingmean - rollingstd, rollingmean + rollingstd
+        return rollingmean, rollingstd, rollingmean - rollingstd * 2, rollingmean + rollingstd * 2
