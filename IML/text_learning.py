@@ -34,7 +34,14 @@ df = tf_idf()
 from sklearn.naive_bayes import GaussianNB
 
 clf = GaussianNB ()
-clf.fit(df, ys)
+clf.fit(df.values, ys)
+
+from sklearn.metrics import confusion_matrix
+print clf.score(df.values, ys)
+y_pred = clf.predict(df.values)
+# print y_pred
+# print ys
+
+print confusion_matrix(ys, y_pred)
 
 
-print clf.score(df, ys)
