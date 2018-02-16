@@ -24,10 +24,10 @@ xs, xs_test, ys, ys_test = train_test_split(features, labels, test_size=0.33, ra
 
 clf = LinearRegression()
 clf.fit(xs, ys)
-print colored("dt local score  => {}".format(clf.score(xs, ys)), 'green', attrs=['reverse'])
-print colored("dt global score => {}".format(clf.score(xs_test, ys_test)), 'green', attrs=['reverse'])
-print colored("coefs names     => {}".format(df.columns.tolist()), 'green', attrs=['reverse'])
-print colored("coefs values    => {}".format(clf.coef_), 'green', attrs=['reverse'])
+print colored("dt local score  => {}".format(clf.score(xs, ys)), 'green', attrs=['bold'])
+print colored("dt global score => {}".format(clf.score(xs_test, ys_test)), 'green', attrs=['bold'])
+print colored("coefs names     => {}".format(df.columns.tolist()), 'green', attrs=['bold'])
+print colored("coefs values    => {}".format(clf.coef_), 'green', attrs=['bold'])
 
 from sklearn.feature_selection import SelectPercentile, chi2, f_oneway, f_classif, f_regression, SelectKBest
 
@@ -39,6 +39,6 @@ xs = selector.transform(xs)
 xs_test = selector.transform(xs_test)
 clf = LinearRegression()
 clf.fit(xs, ys)
-print colored("dt local score  => {}".format(clf.score(xs, ys)), 'green', attrs=['reverse'])
-print colored("dt global score => {}".format(clf.score(xs_test, ys_test)), 'green', attrs=['reverse'])
-print colored("coefs values    => {}".format(clf.coef_), 'green', attrs=['reverse'])
+print colored("dt local score  => {}".format(clf.score(xs, ys)), 'green', attrs=['bold'])
+print colored("dt global score => {}".format(clf.score(xs_test, ys_test)), 'green', attrs=['bold'])
+print colored("coefs values    => {}".format(clf.coef_), 'green', attrs=['bold'])
