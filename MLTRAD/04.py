@@ -45,3 +45,5 @@ plt.plot (x_akbnk, x_akbnk * beta + alpha, color='red')
 
 plt.show()
 
+print dr.corr()
+

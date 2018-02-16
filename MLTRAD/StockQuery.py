@@ -3,7 +3,6 @@ import pandas as pd
 from Integration import Integration
 import matplotlib.pyplot as plt
 
-
 class StockQuery(object):
     def __init__(self, file):
         src = Integration(file)
