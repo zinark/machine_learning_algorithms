@@ -10,25 +10,50 @@ all_codes = q.list_codes()
 main_code = "FBIST.F"
 # codes = ["BIMAS.E", "TCELL.E", "VESTL.E", "GARAN.E", "ASYAB.E"]
 codes = ['KOMHL.E', 'ANSGR.E', 'ANHYT.E', 'ADANA.E', 'FBIST.F', 'SAFGY.E', 'GLDTR.F', 'IZOCM.E']
-#'FBIST.F'
-codes = ['ANSGR.E', 'ANHYT.E', 'GLDTR.F', "BIMAS.E", "TCELL.E"]
+codes = ['KOMHL.E', 'ANSGR.E', 'ANHYT.E', 'GLDTR.F']
 
-port = PortManager(q, codes)
-# allocations = [1. / len(port.df.columns)] * (len(port.df.columns))
+code_list = [
+    # "YESIL.E",
+    "YATAS.E",
+    # "FBIST.F",
+    "GLDTR.F", "GOLDP.F", "ANSGR.E",
+    "ANHYT.E",
+    "USDTR.F",
+    "ULUSE.E",
+    "HEKTS.E",
+    # "IST30.F",
+    # "ISY30.F",
+    "DJIST.F",
+    "FROTO.E",
+    "ADANA.E",
+    "TBORG.E",
+    "ISMEN.E",
+    "MAVI.E",
+    "IZFAS.E",
+    "THYAO.E",
+]
 
-# df_stocks = pd.DataFrame(columns=["stock", "share"])
-# for i in range(len(opt_allocs)):
-#     df_stocks.loc[i] = [list(port.df.columns)[i], opt_allocs[i]]
-# df_stocks.sort_values(by='share', ascending=False, inplace=True)
-# print df_stocks
-# for i in range(len(df_stocks)):
-#     print "{:8} -> {:0.5f}".format(df_stocks.loc[i].stock, df_stocks.loc[i].share)
-# choosen = df_stocks[df_stocks["share"] > 0.1]["stock"].tolist()
-# print "opt allocations = ", opt_allocs
+# 'FBIST.F'
+# codes = ['ANSGR.E', 'ANHYT.E', 'GLDTR.F', "BIMAS.E", "TCELL.E"]
 
-allocs = [0.16897606, 0.21328357, 0.41532779, 0.11879691, 0.08361567]
-opt_allocs, max_val = port.optimize_allocs()
-# df = port.daily_returns(allocs)
-# df = port.cumulative_returns(allocs)
-port.df.plot()
-plt.show()
+date_1 = date(2017, 1, 1)
+date_2 = date(2018, 1, 1)
+port = PortManager(q, code_list,
+                   date_1=date_1,
+                   date_2=date_2
+                   )
+# df = port.find(1)
+# print df.sort_values(by='sharpe', ascending=False)
+# allocs, max_val = port.optimize_allocs()
+# print allocs
+# print port.value(allocs)
+
+# t = pd.read_csv("candidates.csv")
+# codes = t["code"][0:5].values.tolist()
+# df = q.list_stocks(code_list, date_1, date_2, normalize=True)
+# df.plot()
+# plt.show()
+
+
+df = port.print_opt()
+print df
