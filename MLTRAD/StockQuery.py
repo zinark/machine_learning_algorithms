@@ -3,10 +3,12 @@ import pandas as pd
 from Integration import Integration
 import matplotlib.pyplot as plt
 
+
 class StockQuery(object):
     def __init__(self, file):
         src = Integration(file)
         self.q = src.get_all()
+        self.debug = {}
 
     def daily_returns(self, df):
         dr = (df / df.shift(1)) - 1
@@ -29,11 +31,19 @@ class StockQuery(object):
         for code in codes:
             df_temp = q[q["code"] == code].set_index("date").drop("code", axis=1)[["close"]]
             df_temp.columns = [code]
-            df = df.join(df_temp, how='inner')
+            df_temp = df_temp[str(date_1):str(date_2)]
+            self.debug[code] = df_temp
+            if len(df_temp) > 0:
+                df = df.join(df_temp, how='left')
+
+        df = df.fillna(method='ffill').fillna(method='backfill')
+        self.df = df
+
         if normalize:
             df = df / df.ix[0, :]
 
-        df = df.fillna(method='ffill').fillna(method='backfill')
+        assert isinstance(df, pd.DataFrame)
+
         return df
 
     def list_codes(self):
