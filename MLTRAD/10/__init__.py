@@ -4,6 +4,7 @@ from MLTRAD.PortManager import PortManager
 from termcolor import colored
 import matplotlib.pyplot as plt
 import pandas as pd
+import numpy as np
 
 q = StockQuery("../2013_17.csv")
 all_codes = q.list_codes()
@@ -37,11 +38,21 @@ code_list = [
 # codes = ['ANSGR.E', 'ANHYT.E', 'GLDTR.F', "BIMAS.E", "TCELL.E"]
 
 date_1 = date(2017, 1, 1)
-date_2 = date(2018, 1, 1)
-port = PortManager(q, code_list,
-                   date_1=date_1,
-                   date_2=date_2
-                   )
+date_2 = date(2017, 9, 1)
+
+portfolio = PortManager(q, code_list,
+                        date_1=date_1,
+                        date_2=date_2
+                        )
+
+target = "ISMEN.E"
+portfolio.fit(target)
+df = q.list_stocks([target], date_1, date_2, normalize=True)
+df['PRED'] = portfolio.predict(df[target].values.reshape(-1, 1))
+# df['PRED'] = df['PRED'].fillna(1)
+df.plot(figsize=(24,12))
+plt.grid(ls=':')
+plt.show()
 # df = port.find(1)
 # print df.sort_values(by='sharpe', ascending=False)
 # allocs, max_val = port.optimize_allocs()
@@ -53,7 +64,7 @@ port = PortManager(q, code_list,
 # df = q.list_stocks(code_list, date_1, date_2, normalize=True)
 # df.plot()
 # plt.show()
-
-
-df = port.print_opt()
-print df
+#
+#
+# df = port.print_opt()
+# print df

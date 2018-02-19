@@ -4,7 +4,7 @@ class StatsUtil():
     @staticmethod
     def mean(X):
         assert isinstance(X, type([]))
-        return sum(X) / len(X)
+        return float (1. * sum(X) / len(X))
 
     @staticmethod
     def median(X, avg=True):

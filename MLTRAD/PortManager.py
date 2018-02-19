@@ -2,9 +2,9 @@ from datetime import date, datetime
 import pandas as pd
 import numpy as np
 import scipy.optimize as spo
-from termcolor import colored
 from StockQuery import StockQuery
-
+import matplotlib.pyplot as plt
+from termcolor import colored
 
 class PortManager(object):
     def __init__(self, stockQuery, stocks=["BIMAS.E", "TCELL.E", "VESTL.E", "GARAN.E"],
@@ -104,3 +104,6 @@ class PortManager(object):
             r.loc[i] = [code, sharpe]
 
         return r
+
+    def predict(self, x_input):
+        return self.clf.predict(x_input)
