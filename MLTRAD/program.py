@@ -5,7 +5,7 @@ from pytrends.request import TrendReq
 from MLTRAD.StockQuery import StockQuery
 from datetime import date
 
-search_query = u'SASA hisse'
+search_query = u'SASA borsa'
 stock_symbol = 'SASA.E'
 d1 = date(2017, 1, 1)
 d2 = date(2017, 11, 30)
@@ -47,8 +47,9 @@ from sklearn.neural_network import MLPClassifier
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
-from sklearn.metrics import confusion_matrix
-clf = MLPClassifier(hidden_layer_sizes=(1000, 100), activation='relu')
+from sklearn.metrics import confusion_matrix, precision_score, recall_score
+# clf = MLPClassifier(hidden_layer_sizes=(1000, 100), activation='relu')
+clf = DecisionTreeClassifier(min_samples_split=5)
 cols = ["dr", "trend"]
 # for i in range(1, total_feature):
 #     cols.append("dr_{}".format(i))
@@ -57,6 +58,10 @@ features = df[cols]
 labels = df["y"]
 f_train, f_test, l_train, l_test = train_test_split(features, labels, test_size=0.1, random_state=34)
 clf.fit(f_train, l_train)
-
+y_pred = clf.predict(f_test)
+y = l_test.values
+cm = confusion_matrix(y, y_pred)
+print cm
+print "pc=", precision_score(y, y_pred, average='weighted')
+print "rc=", recall_score(y, y_pred, average='weighted')
 print clf.score(f_test, l_test)
-#confusion_matrix()
