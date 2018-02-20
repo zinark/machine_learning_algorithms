@@ -27,6 +27,7 @@ class StockQuery(object):
 
         dates = pd.date_range(date_1, date_2)
         df = pd.DataFrame(index=dates)
+        df.index.name = 'date'
         q = self.q
         for code in codes:
             df_temp = q[q["code"] == code].set_index("date").drop("code", axis=1)[["close"]]
@@ -37,6 +38,7 @@ class StockQuery(object):
                 df = df.join(df_temp, how='left')
 
         df = df.fillna(method='ffill').fillna(method='backfill')
+
         self.df = df
 
         if normalize:
