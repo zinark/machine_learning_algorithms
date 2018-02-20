@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 from pytrends.request import TrendReq
 from MLTRAD.StockQuery import StockQuery
 from datetime import date
-
+import pandas as pd
 search_query = u'SASA borsa'
 stock_symbol = 'SASA.E'
 d1 = date(2017, 1, 1)
@@ -39,8 +39,8 @@ df = df[:-next_week]
 
 df['y'] = df['d'].apply(lambda x: 1 if x > 0 else -1 if x < 0 else 0)
 
-df[["dr", "trend"]].plot()
-plt.show()
+# df[["dr", "trend"]].plot()
+# plt.show()
 
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.neural_network import MLPClassifier
@@ -49,7 +49,7 @@ from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, precision_score, recall_score
 # clf = MLPClassifier(hidden_layer_sizes=(1000, 100), activation='relu')
-clf = DecisionTreeClassifier(min_samples_split=5)
+clf = DecisionTreeClassifier(min_samples_split=2, random_state=34)
 cols = ["dr", "trend"]
 # for i in range(1, total_feature):
 #     cols.append("dr_{}".format(i))
@@ -62,6 +62,6 @@ y_pred = clf.predict(f_test)
 y = l_test.values
 cm = confusion_matrix(y, y_pred)
 print cm
-print "pc=", precision_score(y, y_pred, average='weighted')
-print "rc=", recall_score(y, y_pred, average='weighted')
-print clf.score(f_test, l_test)
+print "pc   =", precision_score(y, y_pred, average=None)
+print "rc   =", recall_score(y, y_pred, average=None)
+print "score=", clf.score(f_test, l_test)
