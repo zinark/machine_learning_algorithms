@@ -48,7 +48,7 @@ model.add(Dense(700, activation='relu'))
 model.add(Dense(600, activation='relu'))
 model.add(Dense(1))
 
-model.compile(optimizer='adam', loss='mean_squared_error')
+model.compile(optimizer='adam', loss='mean_squared_error', metrics=['accuracy'])
 
 model.fit(X, y, epochs=5, validation_split=0.1)
 y_pred = model.predict(X).ravel()
