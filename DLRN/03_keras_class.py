@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 from keras.layers import Dense
-from keras.models import Sequential
+from keras.models import Sequential, load_model, save_model
 from keras.utils import to_categorical
 
 df = pd.read_json('titanic.json')
@@ -30,3 +30,8 @@ model.add(Dense (2, activation='softmax'))
 model.compile(optimizer='sgd', loss='categorical_crossentropy', metrics=['accuracy'])
 
 model.fit(X, y_cats, epochs=10)
+model.save('m.h5')
+m2 = load_model('m.h5')
+predictions = m2.predict(X[0:1])
+#print predictions[:, ,1]
+
